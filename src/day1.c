@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 const char const* DIGIT_LITERALS[] = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 const size_t DIGIT_LITERALS_LENGTH[] = {4, 3, 3, 5, 4, 4, 3, 5, 5, 4};
@@ -10,7 +11,6 @@ const size_t DIGIT_LITERALS_LENGTH[] = {4, 3, 3, 5, 4, 4, 3, 5, 5, 4};
 int find_first_last_digit(const char* str, int32_t* first, int32_t* last, int allow_literals);
 int32_t eval_calibration_value(int32_t first, int32_t last);
 int try_parse_digit(const char* str, int32_t* value, int allow_literals);
-int string_compare(size_t n, const char* str1, const char* str2);
 
 int find_first_last_digit(const char* str, int32_t* first, int32_t* last, int allow_literals) {
     int no_digit_yet_found = -1;
@@ -44,21 +44,12 @@ int try_parse_digit(const char* str, int32_t* value, int allow_literals) {
     }
 
     for (size_t i = 0; i < 10; ++i) {
-        if (string_compare(DIGIT_LITERALS_LENGTH[i], DIGIT_LITERALS[i], str)) {
+        if (strncmp(DIGIT_LITERALS[i], str, DIGIT_LITERALS_LENGTH[i]) == 0) {
             *value = i;
             return 1;
         }
     }
     return 0;
-}
-
-int string_compare(size_t n, const char* str1, const char* str2) {
-    for (size_t i = 0; i < n; ++i) {
-        if (str1[i] != str2[i]) {
-            return 0;
-        }
-    }
-    return 1;
 }
 
 int main(int argc, const char** argv) {
