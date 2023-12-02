@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common.h"
+
 const char const* DIGIT_LITERALS[] = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 const size_t DIGIT_LITERALS_LENGTH[] = {4, 3, 3, 5, 4, 4, 3, 5, 5, 4};
 
@@ -53,16 +55,7 @@ int try_parse_digit(const char* str, int32_t* value, int allow_literals) {
 }
 
 int main(int argc, const char** argv) {
-    if (argc != 2) {
-        fprintf(stderr, "Invalid usage\n%s <DATA FILENAME>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    FILE* file = fopen(argv[1], "r");
-    if (file == NULL) {
-        fprintf(stderr, "Invalid filename '%s'\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
+    FILE* file = open_input_file_or_panic(argc, argv);
 
     int32_t result_1 = 0;
     int32_t result_2 = 0;
