@@ -4,15 +4,20 @@
 
 #include "common.h"
 
+typedef enum CollectStatus {
+    COLLECT_OK = 0,
+    COLLECT_NO_NUMBER,
+    COLLECT_LIMIT_EXCEEDED
+} CollectStatus;
+
 size_t get_row_length(const char* schematic);
 size_t get_index_at(size_t row, size_t column, size_t row_length);
 void get_position_from(size_t index, size_t row_length, size_t* row, size_t* column);
 int is_symbol(char item);
 int has_adjacent_symbol(const char* schematic, size_t schematic_size, size_t row_length, size_t index, size_t length);
 size_t solve_part1(const char* schematic, size_t schematic_size, size_t row_length);
-
 int32_t get_serial_number_containing(const char* schematic, size_t index);
-int push_serial_number(int32_t* serial_numbers, int32_t serial_number);
+CollectStatus collect_serial_number(int32_t* serial_numbers, const char* schematic, size_t index);
 size_t solve_part2(const char* schematic, size_t schematic_size, size_t row_length);
 
 size_t get_row_length(const char* schematic) {
@@ -97,27 +102,17 @@ int32_t get_serial_number_containing(const char* schematic, size_t index) {
     return get_serial_number_containing(schematic, index - 1);
 }
 
-typedef enum CollectStatus {
-    COLLECT_OK,
-    COLLECT_NO_NUMBER,
-    COLLECT_LIMIT_EXCEEDED
-} CollectStatus;
-
 CollectStatus collect_serial_number(int32_t* serial_numbers, const char* schematic, size_t index) {
     if (!isdigit(schematic[index])) {
         return COLLECT_NO_NUMBER;
     }
 
     int32_t serial_number = get_serial_number_containing(schematic, index);
-
-    if (serial_numbers[0] == 0) {
-        serial_numbers[0] = serial_number;
-        return COLLECT_OK;
-    }
-
-    if (serial_numbers[1] == 0) {
-        serial_numbers[1] = serial_number;
-        return COLLECT_OK;
+    for (size_t i = 0; i < 2; ++i) {
+        if (serial_numbers[i] == 0) {
+            serial_numbers[i] = serial_number;
+            return COLLECT_OK;
+        }
     }
 
     return COLLECT_LIMIT_EXCEEDED;
