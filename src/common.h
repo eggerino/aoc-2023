@@ -22,7 +22,7 @@ static char* read_content(FILE* file, size_t* size) {
     fseek(file, 0, SEEK_END);
     *size = ftell(file);
 
-    char* content = (char*)malloc((*size) * sizeof(char));
+    char* content = (char*)malloc((*size + 1) * sizeof(char));
     if (content == NULL) {
         fprintf(stderr, "Unable to aquire memory needed to read the content of the file\n.");
         exit(EXIT_FAILURE);
@@ -30,6 +30,8 @@ static char* read_content(FILE* file, size_t* size) {
 
     fseek(file, 0, SEEK_SET);
     fread(content, sizeof(char), *size, file);
+    content[*size] = '\0';
+
     return content;
 }
 
