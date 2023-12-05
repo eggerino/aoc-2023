@@ -7,8 +7,6 @@ with open(sys.argv[1]) as file:
 seed_block, *mapping_blocks = content.split("\n\n")
 seeds = [int(x) for x in seed_block.split(": ")[1].split()]
 
-seeds_def, *mappings_def = content.split("\n\n")
-
 
 class Mapping:
     def __init__(self, block: str) -> None:
