@@ -9,10 +9,7 @@ struct Map {
 impl Map {
     fn parse(content: &str) -> Self {
         Self {
-            data: content
-                .lines()
-                .map(|line| line.chars().collect())
-                .collect(),
+            data: content.lines().map(|line| line.chars().collect()).collect(),
         }
     }
 
@@ -31,7 +28,11 @@ impl Map {
         None
     }
 
-    fn get_next_tile_from_start(&self, row: usize, col: usize) -> Option<(usize, usize, Direction)> {
+    fn get_next_tile_from_start(
+        &self,
+        row: usize,
+        col: usize,
+    ) -> Option<(usize, usize, Direction)> {
         if row > 0 && self.data[row - 1][col].can_go_down() {
             Some((row - 1, col, Direction::Up))
         } else if row < self.data.len() - 1 && self.data[row + 1][col].can_go_up() {
@@ -45,7 +46,12 @@ impl Map {
         }
     }
 
-    fn get_next_tile(&self, row: usize, col: usize, dir: Direction) -> Option<(usize, usize, Direction)> {
+    fn get_next_tile(
+        &self,
+        row: usize,
+        col: usize,
+        dir: Direction,
+    ) -> Option<(usize, usize, Direction)> {
         let current = self.data[row][col];
 
         if dir != Direction::Down && current.can_go_up() {
@@ -71,7 +77,13 @@ impl Map {
         }
     }
 
-    fn get_side_tiles(&self, to_left_side: bool, row: usize, col: usize, dir: Direction) -> Vec<(usize, usize)> {
+    fn get_side_tiles(
+        &self,
+        to_left_side: bool,
+        row: usize,
+        col: usize,
+        dir: Direction,
+    ) -> Vec<(usize, usize)> {
         let current = self.data[row][col];
 
         if current == '|' {
@@ -81,13 +93,16 @@ impl Map {
                 vec![(row, col + 1)]
             }
         } else if current == '-' {
-            if (dir == Direction::Right && to_left_side) || (dir == Direction::Left && !to_left_side) {
+            if (dir == Direction::Right && to_left_side)
+                || (dir == Direction::Left && !to_left_side)
+            {
                 vec![(row - 1, col)]
             } else {
                 vec![(row + 1, col)]
             }
         } else if current == 'L' {
-            if (dir == Direction::Left && to_left_side) || (dir == Direction::Down && !to_left_side) {
+            if (dir == Direction::Left && to_left_side) || (dir == Direction::Down && !to_left_side)
+            {
                 vec![(row, col - 1), (row + 1, col)]
             } else {
                 Vec::new()
@@ -99,13 +114,16 @@ impl Map {
                 Vec::new()
             }
         } else if current == 'J' {
-            if (dir == Direction::Right && !to_left_side) || (dir == Direction::Down && to_left_side) {
+            if (dir == Direction::Right && !to_left_side)
+                || (dir == Direction::Down && to_left_side)
+            {
                 vec![(row, col + 1), (row + 1, col)]
             } else {
                 Vec::new()
             }
         } else if current == '7' {
-            if (dir == Direction::Right && to_left_side) || (dir == Direction::Up && !to_left_side) {
+            if (dir == Direction::Right && to_left_side) || (dir == Direction::Up && !to_left_side)
+            {
                 vec![(row, col + 1), (row - 1, col)]
             } else {
                 Vec::new()
@@ -128,11 +146,7 @@ impl Map {
     }
 
     fn count_tiles(&self, tile: char) -> usize {
-        self.data
-            .iter()
-            .flatten()
-            .filter(|x| **x == tile)
-            .count()
+        self.data.iter().flatten().filter(|x| **x == tile).count()
     }
 }
 
@@ -211,12 +225,16 @@ fn main() {
     let mut loop_tiles = HashSet::new();
     loop_tiles.insert((start_row, start_col));
 
-    let (first_row, first_col, first_dir) = map.get_next_tile_from_start(start_row, start_col).expect("S has no connecting tile");
+    let (first_row, first_col, first_dir) = map
+        .get_next_tile_from_start(start_row, start_col)
+        .expect("S has no connecting tile");
     let (mut row, mut col, mut dir) = (first_row, first_col, first_dir.clone());
     while map.tile_at(row, col) != 'S' {
         loop_tiles.insert((row, col));
 
-        let (new_row, new_col, new_dir) = map.get_next_tile(row, col, dir.clone()).expect("Tile at row {row} col {col} is a dead end");
+        let (new_row, new_col, new_dir) = map
+            .get_next_tile(row, col, dir.clone())
+            .expect("Tile at row {row} col {col} is a dead end");
 
         if dir.is_left_turn(&new_dir) {
             left_turn_count += 1;
@@ -232,12 +250,13 @@ fn main() {
     let to_left_side = left_turn_count > 0;
     (row, col, dir) = (first_row, first_col, first_dir);
     while map.tile_at(row, col) != 'S' {
-
         for (side_row, side_col) in map.get_side_tiles(to_left_side, row, col, dir.clone()) {
             map.mark_blob(side_row, side_col, '.', 'I');
         }
 
-        (row, col, dir) = map.get_next_tile(row, col, dir).expect("Tile at row {row} col {col} is a dead end");
+        (row, col, dir) = map
+            .get_next_tile(row, col, dir)
+            .expect("Tile at row {row} col {col} is a dead end");
     }
 
     println!("Part 1: {}", loop_tiles.len() / 2);
