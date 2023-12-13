@@ -1,3 +1,3 @@
 # aoc-2023
 
-My solutions to advent of code 2023 written in some different languages (C, Python, Rust).
+My solutions to advent of code 2023 written in some different languages (C, Python, Rust, JavaScript).
