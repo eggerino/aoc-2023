@@ -20,10 +20,10 @@ type Polygon = { Points: Vector2 list; Length: int64 }
 
 let parseInstructionPart1 (line: string) =
     match line.Split(' ') with
-    | [| "U"; x; _ |] when fst (Int32.TryParse x) -> Some { Dir = Up; Amount = Int32.Parse x }
-    | [| "D"; x; _ |] when fst (Int32.TryParse x) -> Some { Dir = Down; Amount = Int32.Parse x }
-    | [| "R"; x; _ |] when fst (Int32.TryParse x) -> Some { Dir = Right; Amount = Int32.Parse x }
-    | [| "L"; x; _ |] when fst (Int32.TryParse x) -> Some { Dir = Left; Amount = Int32.Parse x }
+    | [| "U"; x; _ |] when fst (Int64.TryParse x) -> Some { Dir = Up; Amount = Int64.Parse x }
+    | [| "D"; x; _ |] when fst (Int64.TryParse x) -> Some { Dir = Down; Amount = Int64.Parse x }
+    | [| "R"; x; _ |] when fst (Int64.TryParse x) -> Some { Dir = Right; Amount = Int64.Parse x }
+    | [| "L"; x; _ |] when fst (Int64.TryParse x) -> Some { Dir = Left; Amount = Int64.Parse x }
     | _ -> None
 
 let parseAmountHex (hexAmount: string) =
@@ -89,6 +89,7 @@ let polygonArea polygon =
            - pointArray[wrapIndex pointArray (i - 1)].Y))
     |> Seq.sum
     |> (fun x -> x / 2L)
+    |> Int64.Abs
 
 let outerPolygonArea polygon =
     1L + polygon.Length / 2L + polygonArea polygon
