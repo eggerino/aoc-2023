@@ -1,4 +1,4 @@
-# Part 2 requires solving a non linear system of equations, which can not be guaranteed to be solved analyticly.
+# Part 2 requires solving a non linear system of equations, which can not be solved easily.
 # sympy a symbolic math library is used to solve said system of equations.
 #
 # p + t_i * v = p_i + t_i * v_i
